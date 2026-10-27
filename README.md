@@ -105,7 +105,7 @@ The training command creates:
 - `reports/run_metadata.json`
 - `reports/best_model.joblib`
 
-The summary CSV and comparison chart are included as a reproducible result snapshot. Detailed JSON outputs and the fitted `.joblib` model artifact are excluded from Git by default and regenerated when training runs.
+The summary CSV plus compact JSON reports are committed as baseline result snapshots. The comparison chart and fitted `.joblib` model are generated locally when you run the pipeline; the binary artifacts are not required to reproduce the project.
 
 ## Understand every step
 
