@@ -1,0 +1,1 @@
+NovaGen project structure initialized.
