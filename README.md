@@ -1,118 +1,122 @@
 # NovaGen Health Risk Classification
 
-> **Educational machine-learning project — not a medical diagnostic or clinical decision system.**
+A reproducible supervised machine-learning project based on the **NovaGen Research Labs** assignment. It compares five classifiers on a dataset of anonymized-style participant health indicators and reports class-level evaluation metrics.
 
-NovaGen Research Labs' assignment asks for a binary classification model that uses participant health and lifestyle indicators to predict a target health label. This repository provides a reproducible workflow, step-by-step conceptual documentation, model comparison, tests, and the original assignment notebook.
+> **Important:** This is an educational assignment using a provided dataset. It is **not** a validated medical device, clinical decision-support tool, diagnosis, or substitute for professional medical advice. The assignment describes `Target` as a health outcome/risk label but does not explicitly define what labels `0` and `1` mean. Confirm that mapping before interpreting results.
 
-## Project status
+## Project objective
 
-This repository is currently being populated. The complete project package is available in the conversation download while the remaining files are transferred.
+The assignment asks us to classify records as “healthy” or “unhealthy” using physiological measurements, lifestyle factors, and medical-history indicators. Its stated uses are clinical-trial participant selection and risk-stratified population analysis. A model trained for this assignment must not be used to make those real-world decisions without appropriate clinical validation, bias assessment, governance, and expert review.
 
-## Repository goals
+## Dataset
 
-- Keep the original assignment notebook unmodified.
-- Separate explanatory analysis from the original notebook.
-- Explain every major step: validation, train/test splitting, preprocessing, model training, evaluation, and comparison.
-- Use scikit-learn's official documentation as the conceptual reference.
-- Keep all preprocessing inside model pipelines to avoid fitting preprocessing on the test set.
-- Document the target-label ambiguity and avoid clinical claims.
+The included CSV contains **9,549 rows and 23 columns**: 22 input features and `Target`. This differs from the assignment brief's stated 9,800 records, so the actual file's dimensions are reported here rather than assumed from the brief. The file currently has no missing cells or fully duplicated rows.
 
-## Intended structure
+Features cover:
+- Physiological measures: `Age`, `BMI`, `Blood_Pressure`, `Cholesterol`, `Glucose_Level`, `Heart_Rate`
+- Lifestyle indicators: `Sleep_Hours`, `Exercise_Hours`, `Water_Intake`, `Stress_Level`, `Smoking`, `Alcohol`, `Diet`
+- Health/history indicators: `MentalHealth`, `PhysicalActivity`, `MedicalHistory`, `Allergies`
+- Encoded categories: `Diet_Type__Vegan`, `Diet_Type__Vegetarian`, `Blood_Group_AB`, `Blood_Group_B`, `Blood_Group_O`
+
+The CSV contains values `0`, `1`, and `2` in several coded fields including `Smoking` and `Alcohol`, despite the assignment description presenting these as binary. The project intentionally retains the supplied values instead of silently recoding them; validate the dataset's coding dictionary before production use.
+
+## Models compared
+
+1. Logistic Regression (L2 regularization)
+2. K-Nearest Neighbors (k=5, Euclidean distance)
+3. Random Forest (200 trees)
+4. Gradient Boosting (150 estimators)
+5. Soft Voting Classifier (Logistic Regression + KNN + Random Forest)
+
+Each model is evaluated on the same stratified 80/20 train-test split using `random_state=42`. `StandardScaler` is fitted within a pipeline using the training partition only. Reported metrics include accuracy, precision, recall and F1 for **target label 1**, plus ROC-AUC where available. Reports and confusion matrices are saved in `reports/`.
+
+### Baseline result from the supplied notebook
+
+The original notebook's saved output reports:
+- Logistic Regression — accuracy 81.4%, recall for label 1: 82.8%
+- KNN — accuracy 88.3%, recall for label 1: 88.4%
+- Random Forest — accuracy 93.8%, recall for label 1: 95.9%
+- Gradient Boosting — accuracy 93.0%, recall for label 1: 95.0%
+- Voting Classifier — accuracy 91.6%, recall for label 1: 93.1%
+
+These figures are from the notebook's recorded outputs and are not a guarantee of future performance. The runnable pipeline can produce small differences depending on versions and preprocessing. Because the assignment does not define what target label `1` means, “recall for label 1” is used instead of claiming it specifically measures detection of unhealthy/high-risk individuals.
+
+## Repository layout
 
 ```text
-.
-├── .github/workflows/tests.yml
+novagen-health-risk-classification/
 ├── data/
 │   └── novagen_dataset.csv
-├── docs/
-│   ├── PROJECT_WALKTHROUGH.md
-│   └── SCIKIT_LEARN_CONCEPTS.md
 ├── notebooks/
 │   ├── novagen_original.ipynb
-│   ├── analysis_and_model_comparison.ipynb
-│   └── original_notebook_note.md
-├── reports/
-│   ├── model_comparison.csv
-│   ├── model_comparison.png
-│   ├── classification_reports.json
-│   ├── confusion_matrices.json
-│   └── run_metadata.json
+│   └── analysis_and_model_comparison.ipynb
+├── reports/                         # generated when training runs
 ├── src/
 │   └── train.py
 ├── tests/
 │   └── test_training.py
+├── .gitignore
 ├── requirements.txt
-├── CITATION.cff
-└── LICENSE
+└── README.md
 ```
 
-## Setup
+**Original work is preserved:** `notebooks/novagen_original.ipynb` is a copy of the uploaded notebook, retained without rewriting its cells. The enhanced, reproducible training pipeline is in `src/train.py`, and the analysis notebook is separate.
 
-Python 3.11 is recommended.
+## Run locally
+
+Recommended: Python 3.10 or 3.11.
 
 ```bash
+# 1. Create and activate a virtual environment
 python -m venv .venv
+
 # Windows PowerShell
-.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
+
 # macOS/Linux
-# source .venv/bin/activate
+source .venv/bin/activate
 
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
+# 2. Install dependencies
+python -m pip install -r requirements.txt
 
-## Run the training pipeline
+# 3. Train and compare models
+python -m src.train
 
-From the repository root:
-
-```bash
+# Optional: specify file locations
 python -m src.train --data-path data/novagen_dataset.csv --output-dir reports
-```
 
-The pipeline splits the data using stratification, trains five candidate classifiers, calculates evaluation metrics, and writes CSV/JSON reports and a model-comparison figure. It also saves the selected model as `reports/best_model.joblib` when the pipeline is run.
-
-## Run tests and validate notebooks
-
-```bash
+# 4. Run tests
 python -m unittest discover -s tests -v
-python -c "import nbformat; from pathlib import Path; [nbformat.validate(nbformat.read(p, as_version=4)) for p in Path('notebooks').glob('*.ipynb')]; print('Notebook validation passed')"
 ```
 
-GitHub Actions runs the unit tests and notebook-schema validation on pushes and pull requests to `main`.
+The training command creates:
+- `reports/model_comparison.csv`
+- `reports/model_comparison.png`
+- `reports/classification_reports.json`
+- `reports/confusion_matrices.json`
+- `reports/run_metadata.json`
+- `reports/best_model.joblib`
 
-## Workflow, explained
+These outputs are generated locally and excluded from Git by default.
 
-1. **Load and validate data.** Confirm the CSV exists, the target is present and non-missing, predictors are numeric, and the target has two classes.
-2. **Separate features and target.** `X` contains predictor columns; `y` contains `Target`.
-3. **Create a hold-out set.** Use a stratified train/test split so class proportions are preserved in each partition.
-4. **Build pipelines.** Standardize features inside a scikit-learn `Pipeline`; this keeps scaler fitting limited to training data. Tree models generally do not require feature scaling, but using the same explicit structure simplifies comparison.
-5. **Train candidate classifiers.** Logistic Regression, K-Nearest Neighbors, Random Forest, Gradient Boosting, and a soft Voting Classifier are compared.
-6. **Evaluate.** Accuracy, precision, recall, F1, ROC AUC (where available), classification reports, and confusion matrices are recorded.
-7. **Compare models.** Results are sorted by recall for target label `1`; the chosen model is a selection for this metric on this split, not proof of clinical superiority.
-8. **Save artifacts.** Metrics, plot, metadata, and the fitted model are written to `reports/`.
+## Key implementation choices
 
-See [Project Walkthrough](docs/PROJECT_WALKTHROUGH.md) and [scikit-learn Concepts](docs/SCIKIT_LEARN_CONCEPTS.md) for detail.
+- **Stratified split:** keeps class proportions similar in train and test partitions.
+- **Pipeline-based scaling:** fits preprocessing on the training data only, reducing leakage risk.
+- **Multiple metrics:** accuracy alone can hide class-specific errors; precision, recall, F1 and ROC-AUC offer additional perspectives.
+- **Reproducibility:** fixed random seeds for the data split and supported estimators.
+- **Validation checks:** verifies that the file, target, target classes, and numerical features are present and usable.
 
-## Model comparison
+## Next improvements
 
-Generated results belong in `reports/model_comparison.csv` and `reports/model_comparison.png`. Model scores can change if the dataset, dependency versions, or split configuration changes. Do not hard-code a model ranking into documentation without regenerating the report from the current data and code.
+- Confirm the target label meanings and obtain a data dictionary for encoded feature values.
+- Add cross-validation and hyperparameter tuning without touching the original notebook.
+- Inspect false positives/false negatives and calibrate probabilities if justified.
+- Evaluate subgroup performance, potential bias, and dataset shift.
+- Add model-card documentation and independent validation before any real-world consideration.
 
-## Target-label and safety note
+## Source files
 
-The assignment describes `Target` as a health outcome or risk variable but does not clearly define which numeric value means “healthy” or “unhealthy.” Therefore, metrics described as recall for class 1 refer strictly to **numeric target label 1**. Confirm the label mapping with the assignment owner before interpreting a prediction as a real-world health state. This project is for supervised-learning education and has not been clinically validated.
-
-## Official scikit-learn references
-
-- [An introduction to machine learning with scikit-learn](https://scikit-learn.org/stable/tutorial/basic/tutorial.html)
-- [train_test_split](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html)
-- [Preprocessing data](https://scikit-learn.org/stable/modules/preprocessing.html)
-- [Pipelines and composite estimators](https://scikit-learn.org/stable/modules/compose.html)
-- [Logistic Regression](https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression)
-- [Nearest Neighbors](https://scikit-learn.org/stable/modules/neighbors.html)
-- [Ensemble methods](https://scikit-learn.org/stable/modules/ensemble.html)
-- [Classification metrics](https://scikit-learn.org/stable/modules/model_evaluation.html#classification-metrics)
-- [Cross-validation and model selection](https://scikit-learn.org/stable/modules/cross_validation.html)
-
-## License and citation
-
-See [LICENSE](LICENSE) and [CITATION.cff](CITATION.cff).
+- Assignment brief: `Supervised ML _Assignment5.pdf` (provided separately in the working materials)
+- Original notebook: `notebooks/novagen_original.ipynb`
+- Dataset: `data/novagen_dataset.csv`
