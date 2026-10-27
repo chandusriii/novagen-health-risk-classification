@@ -1,0 +1,7 @@
+{
+  "Logistic Regression": [[730, 184], [171, 825]],
+  "K-Nearest Neighbors": [[807, 107], [116, 880]],
+  "Random Forest": [[837, 77], [38, 958]],
+  "Gradient Boosting": [[831, 83], [50, 946]],
+  "Soft Voting Classifier": [[823, 91], [70, 926]]
+}
