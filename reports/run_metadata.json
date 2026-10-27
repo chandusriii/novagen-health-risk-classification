@@ -1,0 +1,11 @@
+{
+  "rows": 9549,
+  "features": 22,
+  "target_column": "Target",
+  "target_counts": {"0": 4570, "1": 4979},
+  "train_rows": 7639,
+  "test_rows": 1910,
+  "selected_model_by_recall_class_1": "Random Forest",
+  "selection_metric_note": "Recall is shown for target label 1, but the assignment does not define which real-world outcome label 1 represents. Confirm this mapping before interpreting model results.",
+  "clinical_use": false
+}
