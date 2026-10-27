@@ -2,55 +2,6 @@
 
 A reproducible supervised machine-learning project based on the **NovaGen Research Labs** assignment. It compares five classifiers on a dataset of anonymized-style participant health indicators and reports class-level evaluation metrics.
 
-## Project Overview
-
-NovaGen Health Risk Classification is a hands-on supervised machine learning project built to explore, implement, and compare classification algorithms using Python and Scikit-learn.
-
-The main goal is learning by doing: following the end-to-end ML workflow, understanding how different models behave, evaluating their predictions with multiple metrics, and keeping experiments reproducible. The repository includes the supplied original notebook, a separate guided analysis notebook, a reusable training pipeline, documentation, and automated tests.
-
-### Algorithms explored
-- Logistic Regression
-- K-Nearest Neighbors (KNN)
-- Random Forest
-- Gradient Boosting
-- Soft Voting Classifier
-
-### What this project covers
-- Dataset inspection and validation
-- Train/test splitting and stratification
-- Feature scaling with Scikit-learn pipelines
-- Training and comparing several classifiers
-- Evaluating accuracy, precision, recall, F1-score, and ROC-AUC where available
-- Generating reports and confusion matrices
-- Reproducible training and automated tests
-
-### Recorded baseline results
-The original notebook's saved outputs report the following accuracy scores:
-
-| Model | Accuracy |
-|---|---:|
-| Logistic Regression | 81.4% |
-| K-Nearest Neighbors | 88.3% |
-| Random Forest | 93.8% |
-| Gradient Boosting | 93.0% |
-| Soft Voting Classifier | 91.6% |
-
-These are saved baseline results from the supplied notebook, not a guarantee of future performance. The dataset documentation does not define the meaning of target labels `0` and `1`, so results are described in terms of numeric labels rather than assuming that a specific label means “healthy” or “unhealthy.”
-
-### Learning resources
-The repository provides a step-by-step project walkthrough and a Scikit-learn concepts guide with links to the official documentation. The original notebook is retained separately from the enhanced training pipeline.
-
-**Important:** This project is for educational practice only. It is not a clinically validated medical tool and must not be used for diagnosis or real-world healthcare decisions.
-
-See the [project walkthrough](docs/PROJECT_WALKTHROUGH.md), [Scikit-learn concepts guide](docs/SCIKIT_LEARN_CONCEPTS.md), and [training pipeline](src/train.py) to explore the implementation.
-
-
-> **Important:** This is an educational assignment using a provided dataset. It is **not** a validated medical device, clinical decision-support tool, diagnosis, or substitute for professional medical advice. The assignment describes `Target` as a health outcome/risk label but does not explicitly define what labels `0` and `1` mean. Confirm that mapping before interpreting results.
-
-## Project objective
-
-The assignment asks us to classify records as “healthy” or “unhealthy” using physiological measurements, lifestyle factors, and medical-history indicators. Its stated uses are clinical-trial participant selection and risk-stratified population analysis. A model trained for this assignment must not be used to make those real-world decisions without appropriate clinical validation, bias assessment, governance, and expert review.
-
 ## Dataset
 
 The included CSV contains **9,549 rows and 23 columns**: 22 input features and `Target`. This differs from the assignment brief's stated 9,800 records, so the actual file's dimensions are reported here rather than assumed from the brief. The file currently has no missing cells or fully duplicated rows.
