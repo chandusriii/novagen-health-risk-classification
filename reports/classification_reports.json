@@ -1,0 +1,28 @@
+{
+  "Logistic Regression": {
+    "class_0": {"precision": 0.8102, "recall": 0.7987, "f1": 0.8044, "support": 914},
+    "class_1": {"precision": 0.8176, "recall": 0.8283, "f1": 0.8229, "support": 996},
+    "accuracy": 0.8141
+  },
+  "K-Nearest Neighbors": {
+    "class_0": {"precision": 0.8743, "recall": 0.8829, "f1": 0.8786, "support": 914},
+    "class_1": {"precision": 0.8916, "recall": 0.8835, "f1": 0.8875, "support": 996},
+    "accuracy": 0.8832
+  },
+  "Random Forest": {
+    "class_0": {"precision": 0.9566, "recall": 0.9158, "f1": 0.9357, "support": 914},
+    "class_1": {"precision": 0.9256, "recall": 0.9618, "f1": 0.9434, "support": 996},
+    "accuracy": 0.9398
+  },
+  "Gradient Boosting": {
+    "class_0": {"precision": 0.9432, "recall": 0.9092, "f1": 0.9259, "support": 914},
+    "class_1": {"precision": 0.9193, "recall": 0.9498, "f1": 0.9343, "support": 996},
+    "accuracy": 0.9304
+  },
+  "Soft Voting Classifier": {
+    "class_0": {"precision": 0.9216, "recall": 0.9004, "f1": 0.9109, "support": 914},
+    "class_1": {"precision": 0.9105, "recall": 0.9297, "f1": 0.9200, "support": 996},
+    "accuracy": 0.9157
+  },
+  "note": "Rounded evaluation metrics from the provided project run. Class 1 is a numeric label; its health meaning is unspecified in the assignment."
+}
