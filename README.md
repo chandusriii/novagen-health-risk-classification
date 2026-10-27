@@ -50,12 +50,20 @@ novagen-health-risk-classification/
 ├── notebooks/
 │   ├── novagen_original.ipynb
 │   └── analysis_and_model_comparison.ipynb
-├── reports/                         # generated when training runs
+├── docs/
+│   ├── PROJECT_WALKTHROUGH.md       # execution flow, step by step
+│   └── SCIKIT_LEARN_CONCEPTS.md     # concepts + official docs links
+├── reports/                         # generated evaluation outputs
 ├── src/
+│   ├── __init__.py
 │   └── train.py
 ├── tests/
+│   ├── __init__.py
 │   └── test_training.py
+├── .github/workflows/tests.yml      # tests on push and pull request
 ├── .gitignore
+├── CITATION.cff
+├── LICENSE
 ├── requirements.txt
 └── README.md
 ```
@@ -97,7 +105,16 @@ The training command creates:
 - `reports/run_metadata.json`
 - `reports/best_model.joblib`
 
-These outputs are generated locally and excluded from Git by default.
+The summary CSV and comparison chart are included as a reproducible result snapshot. Detailed JSON outputs and the fitted `.joblib` model artifact are excluded from Git by default and regenerated when training runs.
+
+## Understand every step
+
+The documentation is organized as a learning path, not just a usage guide:
+
+- [`docs/PROJECT_WALKTHROUGH.md`](docs/PROJECT_WALKTHROUGH.md) explains the pipeline from reading the CSV through validation, splitting, preprocessing, fitting, evaluation, and saving artifacts.
+- [`docs/SCIKIT_LEARN_CONCEPTS.md`](docs/SCIKIT_LEARN_CONCEPTS.md) explains the scikit-learn concepts and every model family used, with links to the official scikit-learn documentation.
+
+The explanations are paired with the actual code in `src/train.py`. They use the dataset's numeric target labels rather than guessing which label means healthy or unhealthy.
 
 ## Key implementation choices
 
@@ -114,6 +131,10 @@ These outputs are generated locally and excluded from Git by default.
 - Inspect false positives/false negatives and calibrate probabilities if justified.
 - Evaluate subgroup performance, potential bias, and dataset shift.
 - Add model-card documentation and independent validation before any real-world consideration.
+
+## Official scikit-learn references
+
+The project guide links directly to official scikit-learn resources for [`train_test_split`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html), [`StandardScaler`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html), [pipelines](https://scikit-learn.org/stable/modules/compose.html), [classification metrics](https://scikit-learn.org/stable/modules/model_evaluation.html#classification-metrics), and [ensemble methods](https://scikit-learn.org/stable/modules/ensemble.html). See [`docs/SCIKIT_LEARN_CONCEPTS.md`](docs/SCIKIT_LEARN_CONCEPTS.md) for concept-by-concept explanations and model-specific references.
 
 ## Source files
 
